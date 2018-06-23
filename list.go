@@ -8,7 +8,6 @@ import (
 func ListVMs() ([]VM, error) {
 	var vms []VM
 	listre := regexp.MustCompile(`^"(.*)" {(.*)}$`)
-	longre := regexp.MustCompile(`^"?(.*)"?="?([^"]*)"$`)
 
 	scanner, err := runCommand("list", "vms")
 	if err != nil {
@@ -28,24 +27,9 @@ func ListVMs() ([]VM, error) {
 			UUID: results[2],
 		}
 
-		longscanner, err := runCommand("showvminfo", "--machinereadable", vm.UUID)
+		err := vm.Refresh()
 		if err != nil {
-			return []VM{}, fmt.Errorf("Error running `showvminfo`: %s", err)
-		}
-		for longscanner.Scan() {
-			s2 := longscanner.Text()
-			results2 := longre.FindStringSubmatch(s2)
-			if len(results2) != 3 {
-				continue
-			}
-			if results2[1] == "macaddress1" {
-				vm.MAC = results2[2][0:2] + ":" +
-					results2[2][2:4] + ":" +
-					results2[2][4:6] + ":" +
-					results2[2][6:8] + ":" +
-					results2[2][8:10] + ":" +
-					results2[2][10:12]
-			}
+			return nil, err
 		}
 
 		vms = append(vms, vm)
