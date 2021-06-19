@@ -23,8 +23,21 @@ func (vm *VM) Refresh() error {
 		if len(results2) != 3 {
 			continue
 		}
-		if results2[1] == "macaddress1" {
-			vm.MAC = results2[2][0:2] + ":" +
+		if results2[1] == "macaddress1" { // TODO gather all MAC addresses
+			if len(vm.MAC) == 0 {
+				vm.MAC = append(vm.MAC, "")
+			}
+			vm.MAC[0] = results2[2][0:2] + ":" +
+				results2[2][2:4] + ":" +
+				results2[2][4:6] + ":" +
+				results2[2][6:8] + ":" +
+				results2[2][8:10] + ":" +
+				results2[2][10:12]
+		} else if results2[1] == "macaddress2" {
+			if len(vm.MAC) == 1 {
+				vm.MAC = append(vm.MAC, "")
+			}
+			vm.MAC[1] = results2[2][0:2] + ":" +
 				results2[2][2:4] + ":" +
 				results2[2][4:6] + ":" +
 				results2[2][6:8] + ":" +

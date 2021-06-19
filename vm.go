@@ -11,7 +11,7 @@ type VM struct {
 	Bridge    string
 	Group     string
 	Name      string
-	MAC       string
+	MAC       []string
 	Memory    int
 	Power     string
 	Snapshots []Snapshot
